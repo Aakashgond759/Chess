@@ -41,11 +41,20 @@ def main():
     
     loadImages()
     running = True
+    sqSelected = () # no square is selected, keep track of the lasyt click of the user (tuple: (row, col))
+    playerClicks = [] # this will keep tracks fo players click (two tuples: [(6, 4), (4, 4)])
+    
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
-        
+            elif e.type == p.MOUSEBUTTONDOWN:
+                location = p.mouse.get_pos() #(x, y) location of mouse
+                col = location[0]//SQ_SIZE
+                row = location[1]//SQ_SIZE
+                sqSelected = (row, col)
+                if sqSelected == (row, col): # the user clicked same square twice
+                    
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
         p.display.flip()
