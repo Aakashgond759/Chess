@@ -54,6 +54,7 @@ def main():
                 row = location[1]//SQ_SIZE
                 sqSelected = (row, col)
                 if sqSelected == (row, col): # the user clicked same square twice
+                    pass
                     
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
