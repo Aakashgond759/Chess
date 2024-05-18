@@ -39,6 +39,9 @@ def main():
     
     #print(gs.board)
     
+    validMoves = gs.getValidMoves()
+    moveMade = False # flag variable fpr when a move is made
+    
     loadImages()
     running = True
     sqSelected = () # no square is selected, keep track of the lasyt click of the user (tuple: (row, col))
@@ -65,7 +68,10 @@ def main():
                 if len(playerClicks) == 2: # after 2nd click
                     move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
+                    if move in validMoves:
+                        gs.makeMove(move)
+                        moveMade =True
+                    #gs.makeMove(move)
                     sqSelected = () # reset the user clicks
                     playerClicks = []
             
@@ -73,7 +79,12 @@ def main():
             elif e.type == p.KEYDOWN:
                 if e.key == p.K_z: # undo when z is pressed
                     gs.undoMove()
-            
+                    #validMoves = gs.getValidMoves()
+                    moveMade = True
+                    
+        if moveMade:
+            validMoves = gs.getValidMoves()
+            moveMade = False
                
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
