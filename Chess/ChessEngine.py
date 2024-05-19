@@ -15,14 +15,23 @@ class GameState():
         self.board = [
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+            ["--", "--", "--", "wp", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "bp", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "bp", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
 
+        self.moveFunctions = {
+            "p" : self.getPawnMoves,
+            "R" : self.getRookMoves,
+            "N" : self.getKnightsMoves,
+            "B" : self.getBishopMoves,
+            "Q" : self.getQueenMoves,
+            "K" : self.getKingMoves
+        }
+        
         self.WhiteToMove = True
         self.moveLog = []
         
@@ -69,10 +78,12 @@ class GameState():
                 turn = self.board[r][c][0]
                 if (turn =='w' and self.WhiteToMove) or (turn == 'b' and not self.WhiteToMove):
                     piece = self.board[r][c][1]
-                    if piece =='p':
+                    '''if piece =='p':
                         self.getPawnMoves(r, c, moves)
                     elif piece == 'R':
-                        self.getRookMoves (r, c, moves)
+                        self.getRookMoves (r, c, moves)'''
+                    self.moveFunctions[piece](r, c, moves) # calls the appropriate oves function
+                    
         return moves          
             
         """
@@ -84,7 +95,7 @@ class GameState():
                 moves.append(Move((r, c), (r-1, c), self.board))
                 if r==6 and self.board[r-2][c]=="--": #2 square pawn advance
                     moves.append(Move((r,c), (r-2, c),self.board))
-            
+            #captures
             if c-1>=0: # captures to the left
                 if self.board[r-1][c-1][0] =="b":  # enemies piece keys to capture
                     moves.append(Move((r, c), (r-1, c-1), self.board))
@@ -94,13 +105,47 @@ class GameState():
                     moves.append(Move((r, c), (r-1, c+1), self.board))
         
         else: # black pawn moves
-            pass        
-    
+            if self.board[r+1][c] == "--": # 1 square move
+                moves.append(Move((r, c), (r+1, c), self.board))        
+                if r==1 and self.board[r+2][c]=="--": # 2 square move
+                    moves.append(Move((r, c), (r+2, c), self.board))
+            # captures
+            if c-1 >= 0: # capture to left
+                if self.board[r+1][c-1][0] == "w":
+                    moves.append(Move((r, c), (r+1, c-1), self.board))
+                
+            if c+1 <= 7: # capture to right
+                if self.board[r+1][c+1][0] == "w":
+                    moves.append(Move((r, c), (r+1, c+1), self.board))
     
     """
-        get all the pawn moves for the Rook located at row, col and add these moves to the list
-        """
+    get all the Rook moves for the Rook located at row, col and add these moves to the list
+    """
     def getRookMoves(self, r, c, moves):
+        pass
+    
+    """
+    get all the Kinghts moves for the Rook located at row, col and add these moves to the list
+    """
+    def getKnightsMoves(self, r, c, moves):
+        pass
+    
+    """
+    get all the Bishop moves for the Rook located at row, col and add these moves to the list
+    """
+    def getBishopMoves(self, r, c, moves):
+        pass
+    
+    """
+    get all the Queen moves for the Rook located at row, col and add these moves to the list
+    """
+    def getQueenMoves(self, r, c, moves):
+        pass
+    
+    """
+    get all the King moves for the Rook located at row, col and add these moves to the list
+    """
+    def getKingMoves(self, r, c, moves):
         pass
     
 class Move():
