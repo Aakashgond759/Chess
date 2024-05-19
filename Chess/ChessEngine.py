@@ -15,10 +15,10 @@ class GameState():
         self.board = [
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
             ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
-            ["--", "--", "--", "wp", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "wR", "--", "--", "bp", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
@@ -184,9 +184,9 @@ class GameState():
     get all the Queen moves for the Rook located at row, col and add these moves to the list
     """
     def getQueenMoves(self, r, c, moves):
-        #self.getRookMoves(r, c, moves)
-        #self.getBishopMoves(r, c, moves)
-        pass
+        self.getRookMoves(r, c, moves)
+        self.getBishopMoves(r, c, moves)
+        
     
     """
     get all the King moves for the Rook located at row, col and add these moves to the list
