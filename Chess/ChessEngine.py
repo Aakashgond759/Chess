@@ -122,7 +122,7 @@ class GameState():
     get all the Rook moves for the Rook located at row, col and add these moves to the list
     """
     def getRookMoves(self, r, c, moves):
-        directions = ( (-1, 0), (0, -1), (1, 0), (0, 1) )
+        directions = ( (-1, 0), (0, -1), (1, 0), (0, 1) ) # up, left, right, down
         enemyColor = "b" if self.WhiteToMove else "w"
         
         for d in directions:
@@ -138,7 +138,7 @@ class GameState():
                         break
                     else: # friendly piece invalid
                         break
-                else:
+                else: # off board
                     break  
     
     """
@@ -151,7 +151,24 @@ class GameState():
     get all the Bishop moves for the Rook located at row, col and add these moves to the list
     """
     def getBishopMoves(self, r, c, moves):
-        pass
+        directions = ( (-1, -1), (-1, 1), (1, -1), (1, 1) ) #  diagonals
+        enemyColor = "b" if self.WhiteToMove else "w"
+        
+        for d in directions:
+            for i in range(1, 8):
+                endRow = r + d[0] * i
+                endCol = c + d[1] * i
+                if 0 <= endRow < 8 and 0 <= endCol < 8:
+                    endPiece = self.board[endRow][endCol]
+                    if endPiece =="--": # empty space valid
+                        moves.append(Move((r, c), (endRow, endCol), self.board))
+                    elif endPiece[0] == enemyColor: # enemy piece valid
+                        moves.append(Move((r, c), (endRow, endCol), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
     
     """
     get all the Queen moves for the Rook located at row, col and add these moves to the list
