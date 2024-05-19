@@ -145,7 +145,17 @@ class GameState():
     get all the Kinghts moves for the Rook located at row, col and add these moves to the list
     """
     def getKnightsMoves(self, r, c, moves):
-        pass
+        knightMoves = ( (-2, -1), (-2, 1),(-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1) )
+        allyColor = "w" if self.WhiteToMove else "b"
+        
+        for m in knightMoves:
+            endRow = r + m[0]
+            endCol = c + m[1]
+            
+            if 0<= endRow < 8 and 0 <= endCol < 8:
+                endPiece = self.board[endRow][endCol]
+                if endPiece[0] != allyColor: # not an ally piece (empty or enemy piece)
+                    moves.append(Move((r, c), (endRow, endCol), self.board))
     
     """
     get all the Bishop moves for the Rook located at row, col and add these moves to the list
