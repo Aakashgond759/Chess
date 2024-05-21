@@ -380,7 +380,6 @@ class GameState():
                     else:
                         self.blackKingLocation = (r, c)
     
-    
     def checkForPinsAndChecks(self):
         pins = [] # square where the allied pinned pece is and direction pinned from
         checks = [] # squares where enemy is applying a check
@@ -391,40 +390,52 @@ class GameState():
             startRow = self.whiteKingLocation[0]
             startCol = self.whiteKingLocation[1]
         else:
+            print("black king")
             enemyColor = "w"
-            allyColor = "b"
+            allyColor = 'b'
+            print("ally color - ", allyColor)
             startRow = self.blackKingLocation[0]
             startCol = self.blackKingLocation[1]
         # check outward from king for pins and check, keep track of pins
-        directions = ( (-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, 1) )
-        
+        directions = ( (-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1) ,(1, 1) )
+        #print("inside checkForPinsAndChecks")
         for j in range(len(directions)):
             d = directions[j]
             possiblePin = () # reset possible pins
             for i in range(1, 8):
                 endRow = startRow + d[0] * i
                 endCol = startCol + d[1] * i
+                #print("inside i loop")
                 if 0 <= endRow < 8 and 0 <= endCol < 8:
                     endPiece = self.board[endRow][endCol]
+                    #print("endpiece - ", endPiece)
                     if endPiece[0] == allyColor and endPiece[1] != 'K':
-                        if possiblePin == (): # list allied piece could be pinned                                            
+                        if possiblePin == (): 
+                            # list allied piece could be pinned                                            
                             possiblePin = (endRow, endCol, d[0], d[1])
-                        else: # 2nd allied piece, so no pin r check possible in this direction
+                            #print("got possiblepin-", possiblePin)
+                            print("endpiece ", endPiece)
+                            print(allyColor)
+                        else: # 2nd allied piece, so no pin or check possible in this direction
+                            print("using break, ally color ", allyColor)
                             break
                     elif endPiece[0] == enemyColor:
+                        print("ememy color got")
                         type = endPiece[1]
+                        #print("inside elif after i loop: j = ", j)
                         # 5 possiblities here in this complex condition
                         # 1. orthogoally away from king and piece is a rook
                         # 2. diagonally away from king and piece is a bishop
                         # 3. 1 square away diagonally from king and piece is a pawn
                         # 4. any direction and piece is a queen
                         # 5. any direction 1 square away and piece is a king (this is necessary to revent a king move to a square controlled by anoter king)
-                        if (0 <= j <= 3 and type == 'R' ) or ( 4 <= j <=7 and type == 'B') or \
-                            ( i == 1 and type =='p' and ((enemyColor == 'w' and 6 <= j <= 7 ) or \
-                            (enemyColor == 'b' and 4 <= j <= 5) ) ) or (type == 'Q') or (i == 1 and type == 'K'):
+                        if (0 <= j <= 3 and type == 'R' ) or ( 4 <= j <= 7 and type == 'B') or ( i == 1 and type =='p' and ((enemyColor == 'w' and 6 <= j <= 7 ) or (enemyColor == 'b' and 4 <= j <= 5) ) ) or (type == 'Q') or (i == 1 and type == 'K'):
+                            print("inside the 5 conditions")
+                            print(j)
                             if possiblePin == (): # no piece blocking, so check
                                 inCheck = True
                                 checks.append((endRow, endCol, d[0], d[1]))
+                                print(inCheck)
                                 break
                             else: # piece blocking so pin
                                 pins.append(possiblePin)
@@ -444,6 +455,69 @@ class GameState():
                     inCheck = True
                     checks.append((endRow, endCol, m[0], m[1]))
         return inCheck, pins, checks
+        
+    ''' modified code
+    def checkForPinsAndChecks(self):
+        pins = []  # squares where allied pieces are pinned
+        checks = []  # squares where enemy pieces are applying checks
+        inCheck = False
+
+        # Determine the side to move and their corresponding colors
+        if self.whiteToMove:
+            enemyColor = "b"
+            allyColor = "w"
+            startRow, startCol = self.whiteKingLocation
+        else:
+            enemyColor = "w"
+            allyColor = "b"
+            startRow, startCol = self.blackKingLocation
+
+        # Directions for rook and queen (orthogonal) and bishop and queen (diagonal)
+        directions = [(-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+        for d in directions:
+            possiblePin = ()  # reset possible pins
+            for i in range(1, 8):
+                endRow = startRow + d[0] * i
+                endCol = startCol + d[1] * i
+                if 0 <= endRow < 8 and 0 <= endCol < 8:
+                    endPiece = self.board[endRow][endCol]
+                    print(endPiece)
+                    if endPiece[0] == allyColor and endPiece[1] != 'K':
+                        if possiblePin == ():
+                            possiblePin = (endRow, endCol, d[0], d[1])
+                        else:  # Second allied piece, no pin or check possible in this direction
+                            break
+                    elif endPiece[0] == enemyColor:
+                        pieceType = endPiece[1]
+                        if (0 <= directions.index(d) <= 3 and pieceType == 'R') or \
+                        (4 <= directions.index(d) <= 7 and pieceType == 'B') or \
+                        (i == 1 and pieceType == 'p' and ((enemyColor == 'w' and directions.index(d) in [6, 7]) or (enemyColor == 'b' and directions.index(d) in [4, 5]))) or \
+                        (pieceType == 'Q') or (i == 1 and pieceType == 'K'):
+                            if possiblePin == ():  # no piece blocking, so check
+                                inCheck = True
+                                checks.append((endRow, endCol, d[0], d[1]))
+                            else:  # piece blocking so pin
+                                pins.append(possiblePin)
+                            break
+                        else:  # enemy piece not applying check
+                            break
+                else:
+                    break  # off the board
+
+        # Check for knight checks
+        knightMoves = [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
+        for m in knightMoves:
+            endRow = startRow + m[0]
+            endCol = startCol + m[1]
+            if 0 <= endRow < 8 and 0 <= endCol < 8:
+                endPiece = self.board[endRow][endCol]
+                if endPiece[0] == enemyColor and endPiece[1] == 'N':  # enemy knight attacking king
+                    inCheck = True
+                    checks.append((endRow, endCol, m[0], m[1]))
+
+        return inCheck, pins, checks
+    '''
     
 class Move():
     
