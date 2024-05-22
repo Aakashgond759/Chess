@@ -41,6 +41,7 @@ class GameState():
         self.checks = []
         #self.checkMate = False
         #self.staleMate = False
+        self.enpassantPossible = () # coordinates for the square where en passant capture is possible
     
 
     '''
@@ -533,7 +534,7 @@ class Move():
     }
     colsToFiles = { v: k for k, v in filesToCols.items() }
     
-    def __init__(self, startSq, endSq, board):
+    def __init__(self, startSq, endSq, board, enpassantPossible = ()):
         self.startRow = startSq[0]
         self.startCol = startSq[1]
         self.endRow = endSq[0]
@@ -541,11 +542,15 @@ class Move():
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
         self.moveID = self.startRow * 1000 + self.startCol *100 + self.endRow *10 + self.endCol
+        # pawn promotion
         self.isPawnPromotion = False
         if (self.pieceMoved == 'wp' and self.endRow == 0) or (self.pieceMoved == 'bp' and self.endRow == 7):
             self.isPawnPromotion = True
-        
-        #print("move ID =", self.moveID)
+        # 25:00 part 8
+        # en passant
+        self.isEnpassantMove = False
+        if self.pieceMoved[1] == 'p' and (self.endRow, self.endCol) == enpassantPossible:
+            self.isEnpassantMove = True         
     
     '''
     overeiding the equals method
