@@ -56,6 +56,10 @@ class GameState():
             self.whiteKingLocation = (move.endRow, move.endCol)
         elif move.pieceMoved == "bK":
             self.blackKingLocation = (move.endRow, move.endCol)
+        
+        # pawn promotion
+        if move.isPawnPromotion:
+            self.board[move.endRow][move.endCol] = move.pieceMoved[0] + 'Q'
            
 
     '''undo the last move made'''
@@ -217,8 +221,7 @@ class GameState():
                     moves.append(Move( (r, c), (r-1, c), self.board))
                     if r == 6 and self.board[r-2][c] == '--': # 2 square moves
                         moves.append(Move((r, c), (r-2, c), self.board))
-                
-            
+           
             #captures
             if c-1>=0: # captures to the left
                 if self.board[r-1][c-1][0] =="b":  # enemies piece keys to capture
@@ -390,10 +393,10 @@ class GameState():
             startRow = self.whiteKingLocation[0]
             startCol = self.whiteKingLocation[1]
         else:
-            print("black king")
+            #print("black king")
             enemyColor = "w"
             allyColor = 'b'
-            print("ally color - ", allyColor)
+            #print("ally color - ", allyColor)
             startRow = self.blackKingLocation[0]
             startCol = self.blackKingLocation[1]
         # check outward from king for pins and check, keep track of pins
@@ -413,14 +416,10 @@ class GameState():
                         if possiblePin == (): 
                             # list allied piece could be pinned                                            
                             possiblePin = (endRow, endCol, d[0], d[1])
-                            #print("got possiblepin-", possiblePin)
-                            print("endpiece ", endPiece)
-                            print(allyColor)
                         else: # 2nd allied piece, so no pin or check possible in this direction
-                            print("using break, ally color ", allyColor)
                             break
                     elif endPiece[0] == enemyColor:
-                        print("ememy color got")
+                        #print("ememy color got")
                         type = endPiece[1]
                         #print("inside elif after i loop: j = ", j)
                         # 5 possiblities here in this complex condition
@@ -430,12 +429,10 @@ class GameState():
                         # 4. any direction and piece is a queen
                         # 5. any direction 1 square away and piece is a king (this is necessary to revent a king move to a square controlled by anoter king)
                         if (0 <= j <= 3 and type == 'R' ) or ( 4 <= j <= 7 and type == 'B') or ( i == 1 and type =='p' and ((enemyColor == 'w' and 6 <= j <= 7 ) or (enemyColor == 'b' and 4 <= j <= 5) ) ) or (type == 'Q') or (i == 1 and type == 'K'):
-                            print("inside the 5 conditions")
-                            print(j)
                             if possiblePin == (): # no piece blocking, so check
                                 inCheck = True
                                 checks.append((endRow, endCol, d[0], d[1]))
-                                print(inCheck)
+                                #print(inCheck)
                                 break
                             else: # piece blocking so pin
                                 pins.append(possiblePin)
@@ -544,6 +541,10 @@ class Move():
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
         self.moveID = self.startRow * 1000 + self.startCol *100 + self.endRow *10 + self.endCol
+        self.isPawnPromotion = False
+        if (self.pieceMoved == 'wp' and self.endRow == 0) or (self.pieceMoved == 'bp' and self.endRow == 7):
+            self.isPawnPromotion = True
+        
         #print("move ID =", self.moveID)
     
     '''
