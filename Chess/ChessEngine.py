@@ -36,11 +36,11 @@ class GameState():
         self.moveLog = []
         self.whiteKingLocation = (7, 4)
         self.blackKingLocation = (0, 4)
-        self.inCheck = False
-        self.pins = []
-        self.checks = []
-        #self.checkMate = False
-        #self.staleMate = False
+        # self.inCheck = False
+        # self.pins = []
+        # self.checks = []
+        self.checkMate = False
+        self.staleMate = False
         self.enpassantPossible = () # coordinates for the square where en passant capture is possible
     
 
@@ -109,7 +109,7 @@ class GameState():
         - retrun the list of valid moves only
             
         """  
-    '''    
+        
     # all moves considering checks
     def getValidMoves(self):
         tempEnpassantPossible = self.enpassantPossible
@@ -139,9 +139,9 @@ class GameState():
         self.enpassantPossible = tempEnpassantPossible
         return moves
         #return self.getAllPossibleMoves() # for now we will not worry about checks
-        '''
-                        
     
+                        
+    '''
     def getValidMoves(self):
         #tempEnpassantPossible = self.enpassantPossible
         moves = []
@@ -184,18 +184,18 @@ class GameState():
         
         #self.enpassantPossible = tempEnpassantPossible
         return moves           
-      
+        '''
         #22:52
     # determine if current player is in check
-    '''
+    
     def inCheck(self):
         if self.whiteToMove:
             return self.squareUnderAttack(self.whiteKingLocation[0], self.whiteKingLocation[1])
         else:
             return self.squareUnderAttack(self.blackKingLocation[0], self.blackKingLocation[1])    
-    '''
+    
     # determine if the enemy can attack the square r, c
-    '''
+    
     def squareUnderAttack(self, r, c):
         self.whiteToMove = not self.whiteToMove # switch to opponent's turn
         oppMoves = self.getAllPossibleMoves()
@@ -204,7 +204,7 @@ class GameState():
             if move.endRow == r and move.endCol == c: # suqare is under attack
                 return True
         return False
-    ''' 
+    
     
     # All moves without considerning checks
     
@@ -229,14 +229,14 @@ class GameState():
     def getPawnMoves(self, r, c, moves):
         piecePinned = False
         pinDirection = ()
-        
+        '''
         for i in range(len(self.pins)-1, -1, -1):
             if self.pins[i][0] == r and self.pins[i][1] == c:
                 piecePinned = True
                 pinDirection = (self.pins[i][2], self.pins[i][3])
                 self.pins.remove(self.pins[i])
                 break
-        
+        '''
         if self.whiteToMove:
             moveAmount = -1
             startRow = 6
@@ -338,7 +338,7 @@ class GameState():
     def getRookMoves(self, r, c, moves):
         piecePinned = False
         pinDirection = ()
-        
+        '''
         for i in range(len(self.pins)-1, -1, -1):
             if self.pins[i][0] == r and self.pins[i][1]==c:
                 piecePinned = True
@@ -346,7 +346,7 @@ class GameState():
                 if self.board[r][c][1] != 'Q': # can't remove queen from pin on rook moves, only remove it on bishop moves
                     self.pins.remove(self.pins[i])
                     break
-        
+        '''
         directions = ( (-1, 0), (0, -1), (1, 0), (0, 1) ) # up, left, right, down
         enemyColor = "b" if self.whiteToMove else "w"
         
@@ -372,14 +372,14 @@ class GameState():
     """
     def getKnightsMoves(self, r, c, moves):
         piecePinned = False
-        
+        '''
         for i in range(len(self.pins)-1, -1, -1):
             if self.pins[i][0] == r and self.pins[i][1]== c :
                 piecePinned = True
                 pinDirection = (self.pins[i][2], self.pins[i][3])
                 self.pins.remove(self.pins[i])
                 break
-        
+        '''
         knightMoves = ( (-2, -1), (-2, 1),(-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1) )
         allyColor = "w" if self.whiteToMove else "b"
         
@@ -398,14 +398,14 @@ class GameState():
     def getBishopMoves(self, r, c, moves):
         piecePinned = False
         pinDirection = ()
-        
+        '''
         for i in range(len(self.pins)-1, -1, -1):
             if self.pins[i][0] == r and self.pins[i][1]==c:
                 piecePinned = True
                 pinDirection = (self.pins[i][2], self.pins[i][3])
                 self.pins.remove(self.pins[i])
                 break
-        
+        '''
         directions = ( (-1, -1), (-1, 1), (1, -1), (1, 1) ) #  diagonals
         enemyColor = "b" if self.whiteToMove else "w"
         
