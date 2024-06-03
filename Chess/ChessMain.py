@@ -48,6 +48,7 @@ def main():
     sqSelected = () # no square is selected, keep track of the lasyt click of the user (tuple: (row, col))
     playerClicks = [] # this will keep tracks fo players click (two tuples: [(6, 4), (4, 4)])
     gameOver  = False
+    
     playerOne = True # if a human is laying white, then this will be true, if an AI  is playing then its false 
     playerTwo = False # same as above but for black
     
@@ -104,7 +105,10 @@ def main():
         
         # AI move finder logic
         if not gameOver and not humanTurn:
-            AIMove = SmartMoveFinder.findRandomMove(validMoves)
+            # to make it AI vs AI comment the next 2 line of code
+            AIMove = SmartMoveFinder.findBestMove(gs, validMoves)
+            if AIMove is None:
+                AIMove = SmartMoveFinder.findRandomMove(validMoves)
             gs.makeMove(AIMove)
             moveMade = True
             animate = True

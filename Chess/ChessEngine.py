@@ -64,7 +64,17 @@ class GameState():
         
         # pawn promotion
         if move.pawnPromotion:
-            promotedPiece = input("promoted to Q, R, B, or N: ")
+            '''temp_pro = input("promoted to Q, R, B, or N: ")
+            if temp_pro == 'q' or temp_pro == 'Q':
+                promotedPiece = 'Q'
+            elif temp_pro == 'R' or temp_pro == 'r':
+                promotedPiece = 'R'
+            elif temp_pro == 'B' or temp_pro == 'b':
+                promotedPiece = 'B'
+            elif temp_pro == 'N' or temp_pro == 'n':
+                promotedPiece = 'N'
+            '''
+            promotedPiece = 'Q'
             self.board[move.endRow][move.endCol] = move.pieceMoved[0] + promotedPiece
                 
         # update enpassant possible vriable
