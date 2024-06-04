@@ -49,7 +49,15 @@ def main():
     playerClicks = [] # this will keep tracks fo players click (two tuples: [(6, 4), (4, 4)])
     gameOver  = False
     
-    playerOne = True # if a human is laying white, then this will be true, if an AI  is playing then its false 
+    '''
+    playerone and playertwo, make both as True 
+        - you can use for 2 player move
+    playerone and playertwo, make anyone as True
+        - you can play as white/black vs CPU
+    playerone and playertwo, make both as False
+        - you can let the CPU/AI to play for both
+    '''
+    playerOne = False # if a human is laying white, then this will be true, if an AI  is playing then its false 
     playerTwo = False # same as above but for black
     
     while running:

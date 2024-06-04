@@ -1,5 +1,5 @@
 import random
-import ChessEngine
+import ChessEngine, ChessMain
 
 pieceScore = {"K": 0, "Q": 10, "R": 5, "B": 3, "N": 3, "p": 1}
 CHECKMATE = 1000
@@ -15,21 +15,33 @@ find the best move
 '''
 def findBestMove(gs, validMoves):
     turnMultiplier = 1 if gs.whiteToMove else -1
-    maxSCORE = -CHECKMATE
-    bestMove = None
+    opponentMinMaxScore = CHECKMATE
+    bestPlayerMove = None
+    random.shuffle(validMoves)
     
-    if gs.checkMate:
-        score = CHECKMATE
-    elif gs.staleMate:
-        score = STALEMATE
     for playerMove in validMoves:
         gs.makeMove(playerMove)
-        score = turnMultiplier * scoreMaterial(gs.board)
-        if score > maxSCORE:
-            maxSCORE = score  
-            bestMove = playerMove
+        opponentsMoves = gs.getValidMoves()
+        opponentMaxScore = -CHECKMATE
+        
+        for opponentMove in opponentsMoves:
+            gs.makeMove(opponentMove)
+            if gs.checkMate:
+                score = -turnMultiplier * CHECKMATE
+            elif gs.staleMate:
+                score = STALEMATE
+            else:
+                score = -turnMultiplier * scoreMaterial(gs.board)
+            if score > opponentMaxScore:
+                opponentMaxScore = score
+                # bestPlayerMove = playerMove
+            gs.undoMove()
+        
+        if  opponentMaxScore < opponentMinMaxScore:
+            opponentMinMaxScore = opponentMaxScore
+            bestPlayerMove = playerMove 
         gs.undoMove()
-    return bestMove
+    return bestPlayerMove
         
 
 '''
